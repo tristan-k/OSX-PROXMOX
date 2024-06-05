@@ -44,13 +44,13 @@ fi
 ################################################################################################################################################################################################
 ################################################################################################################################################################################################
 
-SCRIPT_DIR=/root/OSX-PROXMOX
+SCRIPT_DIR=/root/git/OSX-PROXMOX
 LOGDIR=${SCRIPT_DIR}/logs
 TMPDIR=${SCRIPT_DIR}/tmp
-ISODIR=/var/lib/vz/template/iso/
+ISODIR=/mnt/proxvz/template/iso/
 HACKPXVERSION="20240313T1034"
 OCVERSION="0.9.9"
-DEFAULT_VM_PREFIX="HACK-"
+DEFAULT_VM_PREFIX="macOS-"
 DEFAULT_RAM_SIZE=4096
 
 if [ `lscpu | grep "Vendor ID" | grep -i amd | wc -l` -eq 1 ]; then OSX_PLATFORM="AMD"; else OSX_PLATFORM="INTEL"; fi
@@ -78,7 +78,7 @@ then
 	echo " "
 	echo " "
 
-	cp ${SCRIPT_DIR}/EFI/*.iso /var/lib/vz/template/iso
+	cp ${SCRIPT_DIR}/EFI/*.iso ${ISODIR}
 
 	echo "alias osx-setup='${SCRIPT_DIR}/setup'" >> /root/.bashrc
 
@@ -712,7 +712,7 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			 --ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
 			--ide2 local:iso/recovery-catalina.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
@@ -1583,12 +1583,12 @@ do
 		LOGFILE=${LOGDIR}/update-opencore-iso.log
 
 		echo " "
-		echo "Copying 'opencore-osx-proxmox-vm.iso' to '/var/lib/vz/template/iso'"
+		echo "Copying 'opencore-osx-proxmox-vm.iso' to '${ISODIR}'"
 		echo " "
 
-		cd /var/lib/vz/template/iso/ > ${LOGFILE} 2>> ${LOGFILE}
+		cd ${ISODIR} > ${LOGFILE} 2>> ${LOGFILE}
 		rm -f opencore-osx-proxmox-vm.iso >> ${LOGFILE} 2>> ${LOGFILE}
-		wget https://github.com/luchina-gabriel/OSX-PROXMOX/raw/main/EFI/opencore-osx-proxmox-vm.iso >> ${LOGFILE} 2>> ${LOGFILE}
+		wget https://github.com/tristan-k/OSX-PROXMOX/raw/main/EFI/opencore-osx-proxmox-vm.iso >> ${LOGFILE} 2>> ${LOGFILE}
 		cd ~
 
 		echo "Please wait ..."
@@ -1611,10 +1611,10 @@ do
 		clear
 
 		echo " "
-		echo "Clearing all macOS Recovery Images in '/var/lib/vz/template/iso'"
+		echo "Clearing all macOS Recovery Images in '${ISODIR}'"
 		echo " "
 
-		rm -f /var/lib/vz/template/iso/recovery-*.iso
+		rm -f ${ISODIR}recovery-*.iso
 		rm -f ${LOGDIR}/crt-recovery-*.log
 
 		echo "Please wait ..."
@@ -1780,7 +1780,7 @@ do
 -				<data>AAAAAA==</data>
 " > ${TMPDIR}/rm-csr-lock.patch
 			cd /
-			patch -p1 < /root/OSX-PROXMOX/tmp/rm-csr-lock.patch >> ${LOGFILE} 2>> ${LOGFILE}
+			patch -p1 < ${ISODIR}/tmp/rm-csr-lock.patch >> ${LOGFILE} 2>> ${LOGFILE}
 			cd ${SCRIPT_DIR}
 			rm -f ${TMPDIR}/rm-csr-lock.patch
 			echo "Now you can use \`csrutil disable\` and \`csrutil authenticated-root disable\` in Recovery OS to disable SIP!"
@@ -1806,7 +1806,7 @@ do
  		<dict>
 " > ${TMPDIR}/timeout.patch
 			cd /
-			patch -p1 < /root/OSX-PROXMOX/tmp/timeout.patch >> ${LOGFILE} 2>> ${LOGFILE}
+			patch -p1 < ${ISODIR}/tmp/timeout.patch >> ${LOGFILE} 2>> ${LOGFILE}
 			cd ${SCRIPT_DIR}
 			rm -f ${TMPDIR}/timeout.patch
 		fi
