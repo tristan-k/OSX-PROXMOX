@@ -48,6 +48,7 @@ SCRIPT_DIR=/root/git/OSX-PROXMOX
 LOGDIR=${SCRIPT_DIR}/logs
 TMPDIR=${SCRIPT_DIR}/tmp
 ISODIR=/mnt/proxvz/template/iso/
+ISO
 HACKPXVERSION="20240313T1034"
 OCVERSION="0.9.9"
 DEFAULT_VM_PREFIX="macOS-"
@@ -246,6 +247,20 @@ do
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
 
 		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
+
+		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
 		read PROC_COUNT
 
@@ -332,8 +347,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--sata0 ${STORAGECRTVM}:${SIZEDISK},cache=none,ssd=1,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-highsierra.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-highsierra.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -372,8 +387,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--sata0 ${STORAGECRTVM}:${SIZEDISK},cache=none,ssd=1,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-highsierra.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-highsierra.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -434,6 +449,20 @@ do
 		read STORAGECRTVM
 
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
+
+		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
 
 		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
@@ -522,8 +551,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--sata0 ${STORAGECRTVM}:${SIZEDISK},cache=none,ssd=1,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-mojave.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-mojave.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -562,8 +591,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--sata0 ${STORAGECRTVM}:${SIZEDISK},cache=none,ssd=1,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-mojave.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-mojave.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -624,6 +653,20 @@ do
 		read STORAGECRTVM
 
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
+
+		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
 
 		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
@@ -712,8 +755,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-catalina.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-catalina.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -752,8 +795,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-catalina.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-catalina.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -814,6 +857,20 @@ do
 		read STORAGECRTVM
 
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
+
+		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
 
 		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
@@ -902,8 +959,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-bigsur.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-bigsur.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -942,8 +999,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-bigsur.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-bigsur.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -1004,6 +1061,20 @@ do
 		read STORAGECRTVM
 
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
+
+		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
 
 		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
@@ -1092,8 +1163,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-monterey.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-monterey.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -1132,8 +1203,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-monterey.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-monterey.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -1194,6 +1265,20 @@ do
 		read STORAGECRTVM
 
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
+
+		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
 
 		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
@@ -1282,8 +1367,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-ventura.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-ventura.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -1322,8 +1407,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-ventura.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-ventura.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -1384,6 +1469,20 @@ do
 		read STORAGECRTVM
 
 		if [ -z $STORAGECRTVM ]; then STORAGECRTVM="local-lvm"; fi;
+
+		echo " "
+		echo "Storages available:"
+		echo " "
+		for stg in `pvesh get storage --noborder --noheader`
+		do
+			echo "     - ${stg}"
+		done
+		echo " "
+
+		echo -n "Enter which storage the iso are stored [or ENTER for Default: local]: "
+		read STORAGEISO
+
+		if [ -z $STORAGEISO ]; then STORAGEISO="local"; fi;
 
 		echo " "
 		echo -n "Allocate CPU cores [Need Power of 2] [or ENTER for Default: 4]: "
@@ -1472,8 +1571,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-sonoma.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-sonoma.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
@@ -1512,8 +1611,8 @@ do
 			--vmgenid 1 \
 			--scsihw virtio-scsi-pci \
 			--virtio0 ${STORAGECRTVM}:${SIZEDISK},cache=none,discard=on \
-			--ide0 local:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
-			--ide2 local:iso/recovery-sonoma.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
+			--ide0 ${STORAGEISO}:iso/opencore-osx-proxmox-vm.iso,cache=unsafe,size=80M \
+			--ide2 ${STORAGEISO}:iso/recovery-sonoma.iso,cache=unsafe,size=800M > ${LOGFILE} 2>> ${LOGFILE}
 
 			## Fix for QEMU 6.1 for PCI Passthrough
 			if [ `qemu-system-x86_64 --version | grep -e "6.1" -e "6.2" -e "7.1" -e "7.2" -e "8.0" -e "8.1" | wc -l` -eq 1 ]
